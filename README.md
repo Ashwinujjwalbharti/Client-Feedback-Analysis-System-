@@ -39,3 +39,15 @@ Deliver a working Spring Boot application that:
 | US11 | As a developer, I want unit and integration tests for all APIs.                                     | High     | 1 day     | 2             |
 | US12 | As a user/admin, I want comprehensive API documentation.                                            | High     | 1 day     | 2             |
 | US13 | As a developer, I want to deploy the solution to a cloud or local server for production use.        | Medium   | 1 day     | 2             |
+<br>
+
+## System Architecture <br>
+**Architecture Overview:** <br>
+
+**Layers:** <br>
+- **Controller Layer:** Handles HTTP requests <br>
+- **Service Layer:** Business logic for feedback processing <br>
+- **Repository Layer:** JPA-based DB operations <br>
+- **Model Layer:** Entity classes for Feedback and Client <br>
+- **Utility Layer:** NLP and sentiment analysis helpers <br>
+
