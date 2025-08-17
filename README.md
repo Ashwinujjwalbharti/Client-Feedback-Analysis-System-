@@ -43,7 +43,7 @@ Deliver a working Spring Boot application that:
 
 ## System Architecture <br>
 **Architecture Overview:** <br>
-
+Client -> Spring Boot REST API -> NLP Service -> PostgreSQL -> Admin API -> Reporting Engine
 **Layers:** <br>
 - **Controller Layer:** Handles HTTP requests <br>
 - **Service Layer:** Business logic for feedback processing <br>
