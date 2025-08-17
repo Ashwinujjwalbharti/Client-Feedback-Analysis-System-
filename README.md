@@ -43,7 +43,8 @@ Deliver a working Spring Boot application that:
 
 ## System Architecture <br>
 **Architecture Overview:** <br>
-Client -> Spring Boot REST API -> NLP Service -> PostgreSQL -> Admin API -> Reporting Engine
+Client -> Spring Boot REST API -> NLP Service -> PostgreSQL -> Admin API -> Reporting Engine <br>
+
 **Layers:** <br>
 - **Controller Layer:** Handles HTTP requests <br>
 - **Service Layer:** Business logic for feedback processing <br>
@@ -51,3 +52,114 @@ Client -> Spring Boot REST API -> NLP Service -> PostgreSQL -> Admin API -> Repo
 - **Model Layer:** Entity classes for Feedback and Client <br>
 - **Utility Layer:** NLP and sentiment analysis helpers <br>
 
+**Tech Stack:** <br>
+- **Language:** Java / Spring Boot
+- **Database:** PostgreSQL / H2 (for mock/test)
+- **ORM:** Spring Data JPA
+- **Libraries:** Java NLP Libraries (e.g., Stanford NLP, Open NLP) for Sentiment Analysis
+- **Auth:** Role-based via Spring Security
+- **API Communication:** REST Template for external mock APIs
+- **Documentation:** Swagger / Open API
+- **Build Tool:** Maven
+- **Testing:** JUnit + Mockito
+- **Development Tools:** IntelliJ IDEA, Postman, Git & GitHub
+
+## Mock APIs to Simulate External Checks <br>
+
+| API Name               | Description                                                      | Endpoint                |
+|------------------------|------------------------------------------------------------------|-------------------------|
+| Sentiment Analysis     | Simulates sentiment tagging of feedback text                     | POST /mock/sentiment    |
+| Keyword Categorization | Simulates keyword-based categorization of feedback               | POST /mock/categorize   |
+| Feedback Summary       | Returns mock frequency data for recurring issues                 | GET /mock/summary       |
+| Report Export          | Simulates exporting filtered feedback reports in PDF or CSV      | POST /mock/export       | 
+| Role-Based Access Check| Simulates checking if a user has permission to access a resource | POST /mock/access-check |
+
+## Core Modules <br>
+**1. Feedback Submission Module** <br>
+- Handles incoming feedback from clients via a REST API. <br>
+- It validates input, assigns a unique ID, and stores the feedback along with a timestamp in the database. <br>
+
+**2. Keyword Categorization Module** <br>
+- Analyzes the feedback text using keyword matching to assign relevant categories (e.g., billing, support, delay). <br>
+
+**3. Sentiment Analysis Module** <br>
+- Processes feedback to determine its emotional tone-positive, neutral, or negative. <br>
+- It uses NLP APIs to tag sentiment, aiding in understanding client mood. <br>
+
+**4. Admin Search & Filter Module** <br>
+- Provides APIs for admins to search and filter feedback based on category, sentiment, and date. <br>
+- Enables quick access to relevant feedback for investigation or reporting. <br>
+
+**5. Reporting Module** <br>
+- Generates weekly frequency reports showing how often each category appears, along with sentiment trends. <br>
+- Helps managers identify recurring issues and monitor client satisfaction. <br>
+
+**6. Unit Testing Module** <br>
+- Includes JUnit and Mockito-based tests for all core modules. <br>
+- Ensures reliability, correctness, and maintainability of the system through automated test coverage. <br>
+
+## Sample Endpoints <br>
+| Endpoint                  | Method | Role           | Description                                                  |
+|---------------------------|--------|----------------|--------------------------------------------------------------|
+| /api/feedback             | POST   | Client         | Submits feedback with message and client ID                  |
+| /api/feedback             | GET    | Admin          | Retrieves feedback with optional filters                     |
+| /api/report/weekly        | GET    | Manager/Admin  | Generates weekly frequency and sentiment report              |
+| /api/feedback/{id}/resolve| PATCH  | Admin          | Marks a specific feedback entry as resolved                  |
+| /api/export               | POST   | Admin          | Exports filtered feedback data in CSV or PDF format          |
+| /api/access-check         | POST   | System         | Verifies if a user has permission to access a specific resource |
+| /api/dashboard/summary    | GET    | Admin          | Returns a summary of categorized feedback and sentiment trends |
+| /api/docs                 | GET    | User/Admin     | Provides Swagger-generated API documentation                  |
+
+
+## Acceptance Criteria <br>
+- Feedback is stored and categorized correctly  
+- Sentiment analysis is accurate and consistent  
+- Admin can filter feedback by category, sentiment, and date  
+- Weekly reports show correct frequency and sentiment distribution  
+- All core modules have unit tests with >80% coverage  
+- API documentation is available via Swagger  
+
+## Deliverables <br>
+- Mock API Services  
+- PostgreSQL DB schema  
+- Unit tests for all services  
+- REST API + Swagger docs  
+- Postman collection  
+- API Documentation  
+- Project Report  
+
+## Learning Objectives <br>
+- Build a full-stack RESTful application using Spring Boot and Java  
+- Apply object-oriented programming principles in system design  
+- Integrate basic NLP for keyword categorization and sentiment analysis  
+- Design and document REST APIs using Swagger/OpenAPI  
+- Implement secure data storage with Spring Data JPA and PostgreSQL  
+- Write unit and integration tests using JUnit and Mockito  
+- Implement role-based access control for secure data access  
+
+## Repository Structure <br>
+client-feedback-analysis/
+│
+├── src/
+│   ├── main/
+│   │   ├── java/com/example/feedback/
+│   │   │   ├── controller/        # REST controllers for handling API requests
+│   │   │   ├── service/           # Business logic and NLP processing
+│   │   │   ├── model/             # Entity classes like Feedback and Client
+│   │   │   ├── repository/        # Spring Data JPA interfaces
+│   │   │   └── util/              # Utility classes for categorization and sentiment
+│   │   └── resources/
+│   │       └── application.yml    # Configuration file
+│
+├── test/
+│   └── java/com/example/feedback/
+│       ├── service/               # Unit tests for service layer
+│       └── controller/            # Unit tests for controller layer
+│
+├── docs/
+│   ├── API.md                     # API documentation
+│   ├── Report.pdf                 # Final project report
+│   └── SystemDesign.png           # System architecture diagram
+│
+├── pom.xml / build.gradle         # Build configuration
+└── README.md                      # Project overview and setup instructions
