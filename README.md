@@ -17,3 +17,10 @@ Deliver a working Spring Boot application that:
 - Admin API for filtering feedback by category, sentiment, and date
 - Generates weekly frequency and sentiment reports
 - Includes unit tests for all core modules
+
+## Sprint Duration <br>
+**Start Date:** 11th August 2025 <br>
+**End Date:** 21th August 2025 <br>
+**Duration:** 25 days <br>
+
+## User Stories <br> 
