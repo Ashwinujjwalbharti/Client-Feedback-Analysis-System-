@@ -1,6 +1,6 @@
 package org.godigit.ClientFeedbackAnalysisSystem.service;
 
-import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
+import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackDto;
 import org.godigit.ClientFeedbackAnalysisSystem.repository.FeedbackRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,18 +14,18 @@ public class FeedbackService {
         this.repository = repository;
     }
 
-    public Feedback saveFeedback(Feedback feedback) {
+    public FeedbackDto saveFeedback(FeedbackDto feedback) {
         return repository.save(feedback);
     }
 
     
-    public List<Feedback> getAllFeedback() {
+    public List<FeedbackDto> getAllFeedback() {
         return repository.findAll();
     }
 
-    public List<Feedback> getFeedbackByClientName(String clientName) {
+    public List<FeedbackDto> getFeedbackByClientName(String clientName) {
         return repository.findAll().stream()
-                .filter(f -> f.getClientName().equalsIgnoreCase(clientName))
+                .filter(f -> f.getName().equalsIgnoreCase(clientName))
                 .toList();
     }
 }
