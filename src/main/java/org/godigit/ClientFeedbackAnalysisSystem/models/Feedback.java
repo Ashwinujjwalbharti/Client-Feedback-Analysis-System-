@@ -1,8 +1,15 @@
 package org.godigit.ClientFeedbackAnalysisSystem.models;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Table(name = "feedbacks")
 public class Feedback {
     @Id
@@ -18,7 +25,6 @@ public class Feedback {
         this.submittedAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
