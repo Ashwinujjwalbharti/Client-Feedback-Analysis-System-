@@ -1,22 +1,16 @@
 package org.godigit.ClientFeedbackAnalysisSystem.mapper;
 
+import java.time.LocalDateTime;
+
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackDto;
 import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
 
 public class FeedbackMapper {
-
-    public static Feedback toEntity(FeedbackDto dto) {
-        Feedback feedback = new Feedback();
-        feedback.setClientName(dto.getName());
-        feedback.setMessage(dto.getMessage());
-        return feedback;
+    public static FeedbackDto toDto(Feedback feedback) {
+        return new FeedbackDto(feedback.getClientName(), feedback.getMessage());
     }
 
-    // Optional: if you want to convert back from entity to DTO
-    public static FeedbackDto toDto(Feedback feedback) {
-        FeedbackDto dto = new FeedbackDto();
-        dto.setName(feedback.getClientName());
-        dto.setMessage(feedback.getMessage());
-        return dto;
+    public static Feedback toEntity(FeedbackDto feedbackDto) {
+        return new Feedback(null, feedbackDto.getName(), feedbackDto.getMessage(), LocalDateTime.now());
     }
 }
