@@ -3,8 +3,10 @@ package org.godigit.ClientFeedbackAnalysisSystem.controller;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackDto;
 import org.godigit.ClientFeedbackAnalysisSystem.mapper.FeedbackMapper;
 import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
+import org.godigit.ClientFeedbackAnalysisSystem.service.EmojiSentimentService;
 import org.godigit.ClientFeedbackAnalysisSystem.service.FeedbackService;
 import org.godigit.ClientFeedbackAnalysisSystem.service.SentimentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,8 @@ public class FeedbackController {
         this.service = service;
         this.sentimentService = sentimentService;
     }
+    @Autowired
+    EmojiSentimentService emojiSentimentService;
 
 
     @PostMapping("/submitFeedback")
@@ -53,6 +57,14 @@ public class FeedbackController {
         }
         return sentimentService.detectSentiment(feedback);
     }
-    
+
+
+    @GetMapping("/emoji-sentiment")
+    public ResponseEntity<String> getEmojiSentiment(@RequestParam String text) {
+        String result = emojiSentimentService.analyzeEmojiSentiment(text);
+        return ResponseEntity.ok(result);
+    }
+
+
 }
 
