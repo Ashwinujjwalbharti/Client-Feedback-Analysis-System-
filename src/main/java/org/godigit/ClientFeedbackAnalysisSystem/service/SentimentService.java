@@ -9,7 +9,7 @@ public class SentimentService {
 
     public String detectSentiment(String content) {
         if(content == null || content.trim().length() == 0) {
-            return "Neutral";
+            return "Feedback is empty.";
         }
         return sentimentAnalyzer.analyzeSentiment(content);
     }
