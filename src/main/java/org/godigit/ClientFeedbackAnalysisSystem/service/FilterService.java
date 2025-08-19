@@ -21,4 +21,6 @@ public class FilterService {
         .filter(f -> f.getSubmittedAt().toLocalDate().equals(date))
         .toList();
     }
+
+
 }

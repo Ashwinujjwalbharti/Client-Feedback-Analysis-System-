@@ -29,4 +29,6 @@ public class FilterController {
         List<FeedbackDto> feedbackDtos = feedbacks.stream().map(FeedbackMapper :: toDto).collect(Collectors.toList());
         return ResponseEntity.ok(feedbackDtos);
     }
+
+
 }
