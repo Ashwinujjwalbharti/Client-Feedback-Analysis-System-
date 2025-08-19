@@ -23,8 +23,9 @@ public class FeedbackController {
     private final FeedbackService service;
 
     private final SentimentService sentimentService;
+
     @Autowired
-    EmojiSentimentService emojiSentimentService;
+    private EmojiSentimentService emojiSentimentService;
 
     public FeedbackController(FeedbackService service, SentimentService sentimentService) {
         this.service = service;
@@ -60,10 +61,11 @@ public class FeedbackController {
         String feedbacks = feedbackList.stream().map(Feedback :: getMessage).collect(Collectors.joining("\n"));
         return sentimentService.detectSentiment(feedbacks);
     }
+
     @GetMapping("/emoji-sentiment")
     public ResponseEntity<String> getEmojiSentiment(@RequestParam String text) {
         String result = emojiSentimentService.analyzeEmojiSentiment(text);
         return ResponseEntity.ok(result);
     }
-
+    
 }
