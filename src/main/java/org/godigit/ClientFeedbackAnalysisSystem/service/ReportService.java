@@ -5,8 +5,8 @@ import org.godigit.ClientFeedbackAnalysisSystem.repository.FeedbackRepository;
 
 import org.springframework.stereotype.Service;
 
-
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -14,14 +14,13 @@ public class ReportService {
 
     private final FeedbackRepository feedbackRepository;
 
-
     public ReportService(FeedbackRepository feedbackRepository) {
         this.feedbackRepository = feedbackRepository;
     }
 
-    public Map<String, Object> generateWeeklyReport() {
+    public Map<String, Object> generateReport(int weeks) {
         LocalDateTime endDate = LocalDateTime.now();
-        LocalDateTime startDate = endDate.minusDays(7);
+        LocalDateTime startDate = endDate.minus(weeks, ChronoUnit.WEEKS);
 
         List<Feedback> feedbacks = feedbackRepository.findBySubmittedAtBetween(startDate, endDate);
 
