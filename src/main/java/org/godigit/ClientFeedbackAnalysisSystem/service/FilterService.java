@@ -2,6 +2,7 @@ package org.godigit.ClientFeedbackAnalysisSystem.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
 import org.godigit.ClientFeedbackAnalysisSystem.repository.FeedbackRepository;
@@ -21,4 +22,12 @@ public class FilterService {
         .filter(f -> f.getSubmittedAt().toLocalDate().equals(date))
         .toList();
     }
+       public List<Feedback> getBySentiment(String sentiment)
+    {
+        return feedbackRepository.findAll().stream()
+                .filter(f -> f.getSentiment() != null &&
+                             f.getSentiment().equalsIgnoreCase(sentiment))
+                .collect(Collectors.toList());
+    }
+
 }
