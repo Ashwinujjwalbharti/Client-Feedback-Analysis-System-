@@ -29,14 +29,14 @@ public class FilterController {
         List<FeedbackDto> feedbackDtos = feedbacks.stream().map(FeedbackMapper :: toDto).collect(Collectors.toList());
         return ResponseEntity.ok(feedbackDtos);
     }
-     @GetMapping("/filterBySentiment")
+    
+    @GetMapping("/sentiment")
     public ResponseEntity<List<FeedbackDto>> filterFeedbackBySentiment(@RequestParam String sentiment) {
         List<Feedback> feedbacks = filterService.getBySentiment(sentiment);
-        List<FeedbackDto> dtos = feedbacks.stream()
-                                          .map(FeedbackMapper::toDto)
-                                          .collect(Collectors.toList());
+        List<FeedbackDto> dtos = feedbacks.stream().map(FeedbackMapper::toDto).collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
+
     @GetMapping("/category")
     public ResponseEntity<List<FeedbackDto>> filterFeedbackByCategory(@RequestParam String category) {
         List<Feedback> feedbacks = filterService.filterByCategory(category);
