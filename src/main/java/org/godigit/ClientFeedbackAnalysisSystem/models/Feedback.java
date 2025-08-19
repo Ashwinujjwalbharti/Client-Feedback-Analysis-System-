@@ -25,5 +25,6 @@ public class Feedback {
     private String message;
     private LocalDateTime submittedAt;
     private String category;
+    private String Sentiment;
 
 }

@@ -34,6 +34,7 @@ public class FeedbackController {
     @PostMapping("/submitFeedback")
     public ResponseEntity<FeedbackDto> submitFeedback(@RequestBody FeedbackDto feedbackDto) {
         Feedback feedback = FeedbackMapper.toEntity(feedbackDto);
+        feedback.setSentiment(sentimentService.detectSentiment(feedback.getMessage()));;
         Feedback saved = service.saveFeedback(feedback);
         return ResponseEntity.ok(FeedbackMapper.toDto(saved));
     }

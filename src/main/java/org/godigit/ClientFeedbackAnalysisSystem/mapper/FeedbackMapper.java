@@ -11,6 +11,6 @@ public class FeedbackMapper {
     }
 
     public static Feedback toEntity(FeedbackDto feedbackDto) {
-        return new Feedback(null, feedbackDto.getName(), feedbackDto.getMessage(), LocalDateTime.now(), feedbackDto.getCategory());
+        return new Feedback(null, feedbackDto.getName(), feedbackDto.getMessage(), LocalDateTime.now(), feedbackDto.getCategory(), null);
     }
 }
