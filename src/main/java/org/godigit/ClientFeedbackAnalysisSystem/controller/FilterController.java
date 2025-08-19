@@ -37,4 +37,11 @@ public class FilterController {
                                           .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
+    @GetMapping("/category")
+    public ResponseEntity<List<FeedbackDto>> filterFeedbackByCategory(@RequestParam String category) {
+        List<Feedback> feedbacks = filterService.filterByCategory(category);
+        List<FeedbackDto> feedbackDtos = feedbacks.stream().map(FeedbackMapper :: toDto).collect(Collectors.toList());
+        return ResponseEntity.ok(feedbackDtos);
+    }
+
 }

@@ -30,4 +30,9 @@ public class FilterService {
                 .collect(Collectors.toList());
     }
 
+    public List<Feedback> filterByCategory(String category) {
+        return feedbackRepository.findAll().stream()
+                .filter(f -> f.getCategory() != null && f.getCategory()
+                        .equals(category)).toList();
+    }
 }
