@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackDto;
 import org.godigit.ClientFeedbackAnalysisSystem.mapper.FeedbackMapper;
 import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
-import org.godigit.ClientFeedbackAnalysisSystem.service.FilterService;
+import org.godigit.ClientFeedbackAnalysisSystem.service.impl.FilterServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FilterController {
     
     @Autowired
-    private FilterService filterService;
+    private FilterServiceImpl filterService;
 
     @GetMapping("/date")
     public ResponseEntity<List<FeedbackDto>> filterFeedbackByDate(@RequestParam String dateString) {
