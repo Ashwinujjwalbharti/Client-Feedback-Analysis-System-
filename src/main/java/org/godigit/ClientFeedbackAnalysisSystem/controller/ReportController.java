@@ -37,7 +37,7 @@ public class ReportController {
         return ResponseEntity.ok(report);
     }
 
-    // Optional: Keep this if you want a default 1-week report
+    
     @GetMapping("/weekly")
     public ResponseEntity<Map<String, Object>> generateWeeklyReport() {
         Map<String, Object> report = reportService.generateReport(1);
