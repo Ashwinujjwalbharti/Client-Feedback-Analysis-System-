@@ -6,10 +6,36 @@ import java.util.*;
 
 import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
 import org.godigit.ClientFeedbackAnalysisSystem.repository.FeedbackRepository;
+import org.godigit.ClientFeedbackAnalysisSystem.service.ReportService;
 import org.springframework.stereotype.Service;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.properties.UnitValue;
+
+
+import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
+import org.godigit.ClientFeedbackAnalysisSystem.repository.FeedbackRepository;
+
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import java.io.ByteArrayOutputStream;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.UnitValue;
+import com.itextpdf.layout.element.Cell;
+
+
 @Service
-public class ReportServiceImpl {
+public class ReportServiceImpl implements ReportService  {
     
     private final FeedbackRepository feedbackRepository;
 
@@ -33,7 +59,7 @@ public class ReportServiceImpl {
         return report;
     }
 
-    private Map<String, Long> getRecurringIssues(List<Feedback> feedbacks) {
+    public Map<String, Long> getRecurringIssues(List<Feedback> feedbacks) {
         Map<String, Long> issuesMap = new HashMap<>();
         for (Feedback feedback : feedbacks) {
             if (feedback.getCategory() != null) {
@@ -43,7 +69,7 @@ public class ReportServiceImpl {
         return issuesMap;
     }
 
-    private Map<String, Long> getSentimentTrends(List<Feedback> feedbacks) {
+    public Map<String, Long> getSentimentTrends(List<Feedback> feedbacks) {
         Map<String, Long> trendsMap = new HashMap<>();
         for (Feedback feedback : feedbacks) {
             if (feedback.getSentiment() != null) {
@@ -51,5 +77,61 @@ public class ReportServiceImpl {
             }
         }
         return trendsMap;
+    }
+
+    public byte[] generatePdfReport(int weeks) {
+        Map<String, Object> report = generateReport(weeks);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PdfWriter writer = new PdfWriter(out);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf);
+
+        // Title
+        document.add(new Paragraph("Client Feedback Report - Last " + weeks + " Week(s)")
+                .setBold()
+                .setFontSize(16));
+
+        // Timestamp
+        document.add(new Paragraph("Generated on: " + LocalDateTime.now().toString())
+                .setFontSize(10));
+
+        // Extract data
+        Map<String, Long> issues = (Map<String, Long>) report.get("recurringIssues");
+        Map<String, Long> sentiments = (Map<String, Long>) report.get("sentimentTrends");
+
+        // Handle empty data
+        if (issues.isEmpty() && sentiments.isEmpty()) {
+            document.add(new Paragraph("No feedback data available for the selected period."));
+        } else {
+            // Recurring Issues Table
+            document.add(new Paragraph("\nRecurring Issues:\n").setBold());
+            Table issuesTable = new Table(UnitValue.createPercentArray(new float[]{70, 30}))
+                    .useAllAvailableWidth();
+            issuesTable.addHeaderCell(new Cell().add(new Paragraph("Issue")).setBold());
+            issuesTable.addHeaderCell(new Cell().add(new Paragraph("Count")).setBold());
+
+            for (Map.Entry<String, Long> entry : issues.entrySet()) {
+                issuesTable.addCell(new Cell().add(new Paragraph(entry.getKey())));
+                issuesTable.addCell(new Cell().add(new Paragraph(String.valueOf(entry.getValue()))));
+            }
+            document.add(issuesTable);
+
+            // Sentiment Trends Table
+            document.add(new Paragraph("\nSentiment Trends:\n").setBold());
+            Table sentimentTable = new Table(UnitValue.createPercentArray(new float[]{70, 30}))
+                    .useAllAvailableWidth();
+            sentimentTable.addHeaderCell(new Cell().add(new Paragraph("Sentiment")).setBold());
+            sentimentTable.addHeaderCell(new Cell().add(new Paragraph("Count")).setBold());
+
+            for (Map.Entry<String, Long> entry : sentiments.entrySet()) {
+                sentimentTable.addCell(new Cell().add(new Paragraph(entry.getKey())));
+                sentimentTable.addCell(new Cell().add(new Paragraph(String.valueOf(entry.getValue()))));
+            }
+            document.add(sentimentTable);
+        }
+
+        document.close();
+        return out.toByteArray();
     }
 }
