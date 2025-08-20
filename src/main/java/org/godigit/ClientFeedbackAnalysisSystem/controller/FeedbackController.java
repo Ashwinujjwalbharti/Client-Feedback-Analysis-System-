@@ -32,7 +32,7 @@ public class FeedbackController {
         this.sentimentService = sentimentService;
     }
 
-    @PostMapping("/submitFeedback")
+    @PostMapping("/submit")
     public ResponseEntity<FeedbackDto> submitFeedback(@RequestBody FeedbackDto feedbackDto) {
         Feedback feedback = FeedbackMapper.toEntity(feedbackDto);
         feedback.setSentiment(sentimentService.detectSentiment(feedback.getMessage()));;
@@ -41,14 +41,14 @@ public class FeedbackController {
     }
 
 
-    @GetMapping("/retrieveFeedback")
+    @GetMapping("/retrieve")
     public ResponseEntity<List<FeedbackDto>> getAllFeedback() {
         List<Feedback> feedbacks = service.getAllFeedback();
         List<FeedbackDto> feedbackDtos = feedbacks.stream().map(FeedbackMapper :: toDto).collect(Collectors.toList());
         return ResponseEntity.ok(feedbackDtos);
     }
 
-    @GetMapping("/client")
+    @GetMapping("/retrieve/client")
     public ResponseEntity<List<FeedbackDto>> getFeedbackByClient(@RequestParam String name) {
         List<Feedback> feedbacks = service.getFeedbackByClientName(name);
         List<FeedbackDto> feedbackDtos = feedbacks.stream().map(FeedbackMapper :: toDto).collect(Collectors.toList());

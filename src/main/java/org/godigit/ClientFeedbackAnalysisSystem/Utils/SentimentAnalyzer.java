@@ -1,4 +1,4 @@
-package org.godigit.ClientFeedbackAnalysisSystem.Utils;
+package org.godigit.ClientFeedbackAnalysisSystem.utils;
 
 import java.util.Properties;
 
