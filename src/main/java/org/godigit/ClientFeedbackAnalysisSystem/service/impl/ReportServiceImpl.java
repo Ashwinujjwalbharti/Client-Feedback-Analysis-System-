@@ -14,25 +14,9 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.properties.UnitValue;
-
-
-import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
-import org.godigit.ClientFeedbackAnalysisSystem.repository.FeedbackRepository;
-
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Paragraph;
 import java.io.ByteArrayOutputStream;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.properties.UnitValue;
-import com.itextpdf.layout.element.Cell;
-
 
 @Service
 public class ReportServiceImpl implements ReportService  {
@@ -63,7 +47,10 @@ public class ReportServiceImpl implements ReportService  {
         Map<String, Long> issuesMap = new HashMap<>();
         for (Feedback feedback : feedbacks) {
             if (feedback.getCategory() != null) {
-                issuesMap.put(feedback.getCategory(), issuesMap.getOrDefault(feedback.getCategory(), 0L) + 1);
+                String[] categories = feedback.getCategory().split(",");
+                for(String category : categories) {
+                    issuesMap.put(category, issuesMap.getOrDefault(feedback.getCategory(), 0L) + 1);
+                }
             }
         }
         return issuesMap;
