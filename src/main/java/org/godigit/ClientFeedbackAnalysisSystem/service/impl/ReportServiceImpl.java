@@ -87,24 +87,24 @@ public class ReportServiceImpl implements ReportService  {
         PdfDocument pdf = new PdfDocument(writer);
         Document document = new Document(pdf);
 
-        // Title
+        
         document.add(new Paragraph("Client Feedback Report - Last " + weeks + " Week(s)")
                 .setBold()
                 .setFontSize(16));
 
-        // Timestamp
+       
         document.add(new Paragraph("Generated on: " + LocalDateTime.now().toString())
                 .setFontSize(10));
 
-        // Extract data
+        
         Map<String, Long> issues = (Map<String, Long>) report.get("recurringIssues");
         Map<String, Long> sentiments = (Map<String, Long>) report.get("sentimentTrends");
 
-        // Handle empty data
+       
         if (issues.isEmpty() && sentiments.isEmpty()) {
             document.add(new Paragraph("No feedback data available for the selected period."));
         } else {
-            // Recurring Issues Table
+            
             document.add(new Paragraph("\nRecurring Issues:\n").setBold());
             Table issuesTable = new Table(UnitValue.createPercentArray(new float[]{70, 30}))
                     .useAllAvailableWidth();
@@ -117,7 +117,7 @@ public class ReportServiceImpl implements ReportService  {
             }
             document.add(issuesTable);
 
-            // Sentiment Trends Table
+            
             document.add(new Paragraph("\nSentiment Trends:\n").setBold());
             Table sentimentTable = new Table(UnitValue.createPercentArray(new float[]{70, 30}))
                     .useAllAvailableWidth();
