@@ -1,6 +1,6 @@
 package org.godigit.ClientFeedbackAnalysisSystem.service;
 
-import org.godigit.ClientFeedbackAnalysisSystem.Utils.SentimentAnalyzer;
+import org.godigit.ClientFeedbackAnalysisSystem.utils.SentimentAnalyzer;
 import org.springframework.stereotype.Service;
 
 @Service
