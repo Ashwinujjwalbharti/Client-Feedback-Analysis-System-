@@ -1,6 +1,6 @@
 package org.godigit.ClientFeedbackAnalysisSystem.controller;
 
-import org.godigit.ClientFeedbackAnalysisSystem.service.ReportService;
+import org.godigit.ClientFeedbackAnalysisSystem.service.impl.ReportServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,9 +13,9 @@ import java.util.Map;
 @RequestMapping("/api/feedback/reports")
 public class ReportController {
 
-    private final ReportService reportService;
+    private final ReportServiceImpl reportService;
 
-    public ReportController(ReportService reportService) {
+    public ReportController(ReportServiceImpl reportService) {
         this.reportService = reportService;
     }
 
@@ -31,4 +31,5 @@ public class ReportController {
         Map<String, Object> report = reportService.generateReport(weeks);
         return ResponseEntity.ok(report);
     }
+
 }
