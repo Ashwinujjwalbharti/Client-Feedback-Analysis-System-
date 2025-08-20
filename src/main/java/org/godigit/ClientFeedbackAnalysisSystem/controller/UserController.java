@@ -3,7 +3,6 @@ package org.godigit.ClientFeedbackAnalysisSystem.controller;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.UpdateRoleRequest;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.UserDto;
 import org.godigit.ClientFeedbackAnalysisSystem.models.User;
-import org.godigit.ClientFeedbackAnalysisSystem.service.UserService;
 import org.godigit.ClientFeedbackAnalysisSystem.service.impl.UserServiceImpl;
 import org.springframework.web.bind.annotation.*;
 

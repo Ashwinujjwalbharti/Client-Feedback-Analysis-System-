@@ -17,5 +17,4 @@ import lombok.ToString;
 public class FeedbackDto {
     private String name;
     private String message;
-    private String category;
 }
