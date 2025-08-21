@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
@@ -17,5 +19,10 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     
     @Query("SELECT f FROM Feedback f WHERE LOWER(f.message) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Feedback> searchByKeyword(@Param("keyword") String keyword);
+    
+    
+    @Query("SELECT f FROM Feedback f WHERE LOWER(f.category) = LOWER(:category)")
+    Page<Feedback> findByCategory(@Param("category") String category,Pageable pageable);
+
 
 }

@@ -2,7 +2,6 @@ package org.godigit.ClientFeedbackAnalysisSystem.dto;
 
 import lombok.*;
 import org.godigit.ClientFeedbackAnalysisSystem.entity.Role;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
