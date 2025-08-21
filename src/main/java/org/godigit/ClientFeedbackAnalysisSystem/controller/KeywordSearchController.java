@@ -19,8 +19,17 @@ public class KeywordSearchController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Feedback>> searchFeedbacks(@RequestParam String keyword) {
+    public ResponseEntity<?> searchFeedbacks(@RequestParam String keyword) {
+        if(keyword.isEmpty() || keyword.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Keyword must not be empty.");
+        }
+
         List<Feedback> results = keywordSearchService.searchByKeyword(keyword);
+        
+        if(results.isEmpty()) {
+            return ResponseEntity.status(404).body("No feedbacks found for keyword: " + keyword);
+        }
+
         return ResponseEntity.ok(results);
     }
 }
