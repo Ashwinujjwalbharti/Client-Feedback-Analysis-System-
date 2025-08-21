@@ -32,4 +32,36 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .filter(f -> f.getClientName().equalsIgnoreCase(clientName))
                 .toList();
     }
+
+    @Override
+    public String deleteClientFeedback(String name) {
+        List<Feedback> feedbacks = getFeedbackByClientName(name);
+        if(feedbacks.isEmpty()) return "There are no feedbacks.";
+        repository.deleteAll(feedbacks);
+        return "Client Feedbacks deleted successfully.";
+    }
+
+    @Override
+    public String deleteFeedbacks() {
+        repository.deleteAll();
+        return "All the client feedbacks deleted successully.";
+    }
+
+    @Override
+    public String deleteFeedbackByCategory(String category) {
+        List<Feedback> feedbacks = repository.findAll().stream()
+        .filter(feedback -> feedback != null && feedback.getCategory().contains(category.toLowerCase()))
+        .toList();
+        repository.deleteAll(feedbacks);
+        return "Category based client feedbacks have been successfully deleted.";
+    }
+
+    @Override
+    public String deleteFeedbackBySentiment(String sentiment) {
+        List<Feedback> feedbacks = repository.findAll().stream()
+        .filter(feedback -> feedback != null && feedback.getSentiment().equalsIgnoreCase(sentiment))
+        .toList();
+        repository.deleteAll(feedbacks);
+        return "Sentiment based client feedbacks have been successfully deleted.";
+    }
 }

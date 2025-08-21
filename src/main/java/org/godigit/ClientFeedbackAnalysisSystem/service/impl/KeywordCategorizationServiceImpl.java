@@ -1,7 +1,7 @@
 package org.godigit.ClientFeedbackAnalysisSystem.service.impl;
 
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.godigit.ClientFeedbackAnalysisSystem.service.KeywordCategorizationService;
 import org.godigit.ClientFeedbackAnalysisSystem.utils.KeywordCategorizer;
@@ -14,18 +14,14 @@ public class KeywordCategorizationServiceImpl implements KeywordCategorizationSe
 
     @Override
     public String categorizeFeedback(String message) {
-        String category = "";
-        Map<String, List<String>> keywords = keywordCategorizer.getKeywords();
         String feedbackMsg = message.toLowerCase();
-        for(Map.Entry<String, List<String>> entry : keywords.entrySet()) {
-            for(String keyword : entry.getValue()) {
-                if(feedbackMsg.contains(keyword.toLowerCase())) {
-                    category += entry.getKey() + ",";
-                }
-            }
-        }
-        int n = category.length();
-        return (n == 0) ? category : category.substring(0, n - 1);
+        String category = keywordCategorizer.getKeywords().entrySet().stream()
+        .filter(entry -> entry.getValue().stream()
+        .anyMatch(keyword -> feedbackMsg.contains(keyword.toLowerCase())))
+        .map(Map.Entry :: getKey)
+        .distinct().
+        collect(Collectors.joining(","));
+        return category;
     }
 
 }
