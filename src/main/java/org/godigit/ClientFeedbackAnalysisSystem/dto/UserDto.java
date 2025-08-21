@@ -5,7 +5,7 @@ import org.godigit.ClientFeedbackAnalysisSystem.entity.Role;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-@Component
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
