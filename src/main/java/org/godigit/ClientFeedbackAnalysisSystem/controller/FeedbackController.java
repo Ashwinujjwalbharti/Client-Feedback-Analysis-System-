@@ -3,6 +3,7 @@ package org.godigit.ClientFeedbackAnalysisSystem.controller;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackCategoryUpdate;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackDto;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackMessageUpdate;
+import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackNameUpdate;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackSentimentUpdate;
 import org.godigit.ClientFeedbackAnalysisSystem.mapper.FeedbackMapper;
 import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
@@ -62,13 +63,13 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbacks);
     }
 
-    @GetMapping("/update/name")
-    public ResponseEntity<List<Feedback>> updateClientName(@RequestParam String name, String newName) {
-        List<Feedback> feedbacks = service.getFeedbackByClientName(name);
+    @PutMapping("/update/name")
+    public ResponseEntity<List<Feedback>> updateClientName(@RequestBody FeedbackNameUpdate feedbackNameUpdate) {
+        List<Feedback> feedbacks = service.getFeedbackByClientName(feedbackNameUpdate.getOldName());
         
         feedbacks.stream()
         .filter(feedback -> feedback != null)
-        .forEach(feedback -> feedback.setClientName(newName));
+        .forEach(feedback -> feedback.setClientName(feedbackNameUpdate.getNewName()));
         
         feedbacks.forEach(service :: saveFeedback);
 
@@ -81,22 +82,18 @@ public class FeedbackController {
         
         feedbacks.stream()
         .filter(feedback -> feedback != null && feedback.getId() == feedbackMessageUpdate.getId())
-        .forEach(feedback -> feedback.setMessage(feedbackMessageUpdate.getMessage()));
-        
-        feedbacks.stream()
-        .filter(feedback -> feedback != null && feedback.getId() == feedbackMessageUpdate.getId())
-        .forEach(feedback -> feedback.setCategory(keywordCategorizationServiceImpl.categorizeFeedback(feedbackMessageUpdate.getMessage())));
-        
-        feedbacks.stream()
-        .filter(feedback -> feedback != null && feedback.getId() == feedbackMessageUpdate.getId())
-        .forEach(feedback -> feedback.setSentiment(sentimentService.detectSentiment(feedbackMessageUpdate.getMessage())));
+        .forEach(feedback -> {
+            feedback.setMessage(feedbackMessageUpdate.getMessage());
+            feedback.setCategory(keywordCategorizationServiceImpl.categorizeFeedback(feedbackMessageUpdate.getMessage()));
+            feedback.setSentiment(sentimentService.detectSentiment(feedbackMessageUpdate.getMessage()));
+        });
 
         feedbacks.forEach(service :: saveFeedback);
 
         return ResponseEntity.ok(feedbacks);
     }
 
-    @GetMapping("/update/category")
+    @PutMapping("/update/category")
     public ResponseEntity<List<Feedback>> updateClientFeedbackCategory(@RequestBody FeedbackCategoryUpdate feedbackCategoryUpdate) {
         List<Feedback> feedbacks = service.getFeedbackByClientName(feedbackCategoryUpdate.getName());
 
@@ -109,7 +106,7 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbacks);
     }
 
-    @GetMapping("/update/sentiment")
+    @PutMapping("/update/sentiment")
     public ResponseEntity<List<Feedback>> updateClientFeedbackSentiment(@RequestBody FeedbackSentimentUpdate feedbackSentimentUpdate) {
         List<Feedback> feedbacks = service.getFeedbackByClientName(feedbackSentimentUpdate.getName());
 

@@ -19,8 +19,7 @@ public class ReportController {
     }
 
     @GetMapping("/weekly/{weeks}")
-    public ResponseEntity<?> generateReport(@PathVariable int weeks,
-                                            @RequestParam(required = false) String format) {
+    public ResponseEntity<?> generateReport(@PathVariable int weeks, @RequestParam(required = false) String format) {
         if ("pdf".equalsIgnoreCase(format)) {
             byte[] pdfBytes = reportService.generatePdfReport(weeks);
 
