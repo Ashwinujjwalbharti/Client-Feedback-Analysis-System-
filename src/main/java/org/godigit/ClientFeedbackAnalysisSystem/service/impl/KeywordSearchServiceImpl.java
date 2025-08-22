@@ -20,6 +20,22 @@ public class KeywordSearchServiceImpl implements KeywordSearchService {
 
     @Override
     public List<Feedback> searchByKeyword(String keyword) {
-        return feedbackRepository.searchByKeyword(keyword);
+        List<Feedback> feedbacks = feedbackRepository.findAll();
+        
+        List<Feedback> feedbacksWithKeywords = feedbacks.stream()
+        .filter(feedback -> (feedback.getCategory() != null 
+        && feedback.getCategory().toLowerCase().contains(keyword.toLowerCase())) 
+        
+        || (feedback.getMessage() != null 
+        && feedback.getMessage().toLowerCase().contains(keyword.toLowerCase())) 
+        
+        || (feedback.getClientName() != null 
+        && feedback.getClientName().toLowerCase().contains(keyword.toLowerCase())) 
+        
+        || (feedback.getSentiment() != null 
+        && feedback.getSentiment().toLowerCase().contains(keyword.toLowerCase())))
+        .toList();
+        
+        return feedbacksWithKeywords;
     }
 }

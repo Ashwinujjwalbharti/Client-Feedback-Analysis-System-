@@ -93,8 +93,7 @@ public class ReportServiceImpl implements ReportService  {
         } else {
             
             document.add(new Paragraph("\nRecurring Issues:\n").setBold());
-            Table issuesTable = new Table(UnitValue.createPercentArray(new float[]{70, 30}))
-                    .useAllAvailableWidth();
+            Table issuesTable = new Table(UnitValue.createPercentArray(new float[]{70, 30})).useAllAvailableWidth();
             issuesTable.addHeaderCell(new Cell().add(new Paragraph("Issue")).setBold());
             issuesTable.addHeaderCell(new Cell().add(new Paragraph("Count")).setBold());
 

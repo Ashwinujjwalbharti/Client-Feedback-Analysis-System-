@@ -50,7 +50,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public String deleteFeedbackByCategory(String category) {
         List<Feedback> feedbacks = repository.findAll().stream()
-        .filter(feedback -> feedback != null && feedback.getCategory().contains(category.toLowerCase()))
+        .filter(feedback -> feedback != null && feedback.getCategory().toLowerCase().contains(category.toLowerCase()))
         .toList();
         repository.deleteAll(feedbacks);
         return "Category based client feedbacks have been successfully deleted.";
