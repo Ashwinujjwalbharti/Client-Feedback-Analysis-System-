@@ -5,7 +5,6 @@ import org.godigit.ClientFeedbackAnalysisSystem.repository.FeedbackRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -25,13 +24,13 @@ class KeywordSearchServiceImplTest {
     private KeywordSearchServiceImpl service;
 
     private Feedback feedback(String client, String message, String category, String sentiment) {
-    Feedback f = new Feedback();
-    f.setClientName(client);
-    f.setMessage(message);
-    f.setCategory(category);
-    f.setSentiment(sentiment);
-    return f;
-}
+        Feedback f = new Feedback();
+        f.setClientName(client);
+        f.setMessage(message);
+        f.setCategory(category);
+        f.setSentiment(sentiment);
+        return f;
+    }
 
     @Test
     @DisplayName("searchByKeyword: returns matching feedbacks from repository")
@@ -45,9 +44,7 @@ class KeywordSearchServiceImplTest {
         List<Feedback> result = service.searchByKeyword(keyword);
 
         assertEquals(2, result.size());
-        assertTrue(result.stream().allMatch(f ->
-            f.getMessage().toLowerCase().contains("delay")
-        ));
+        assertTrue(result.stream().allMatch(f -> f.getMessage().toLowerCase().contains("delay")));
         verify(repository, times(1)).searchByKeyword(keyword);
         verifyNoMoreInteractions(repository);
     }
@@ -56,13 +53,16 @@ class KeywordSearchServiceImplTest {
     @DisplayName("searchByKeyword: returns empty list when no matches found")
     void searchByKeyword_returnsEmptyList() {
         String keyword = "nonexistent";
-        when(repository.searchByKeyword(keyword)).thenReturn(List.of());
+
+        Feedback f1 = feedback("Acme", "Service was good", "support", "positive");
+        Feedback f2 = feedback("Globex", "Quick response", "billing", "neutral");
+
+        when(repository.findAll()).thenReturn(List.of(f1, f2));
 
         List<Feedback> result = service.searchByKeyword(keyword);
 
         assertTrue(result.isEmpty());
-        verify(repository).searchByKeyword(keyword);
+        verify(repository).findAll();
         verifyNoMoreInteractions(repository);
     }
 }
-

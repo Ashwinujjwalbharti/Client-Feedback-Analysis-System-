@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
         user.setRoles(List.of(newRole));
         userRepository.save(user);
-         return userMapper.toDTO(user);
+        return userMapper.toDTO(user);
 
     }
 }

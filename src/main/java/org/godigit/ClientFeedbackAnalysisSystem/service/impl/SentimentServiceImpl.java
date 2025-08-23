@@ -7,7 +7,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class SentimentServiceImpl implements SentimentService {
 
-    private final SentimentAnalyzer sentimentAnalyzer = new SentimentAnalyzer();
+    private final SentimentAnalyzer sentimentAnalyzer;
+
+    public SentimentServiceImpl(SentimentAnalyzer sentimentAnalyzer) {
+        this.sentimentAnalyzer = sentimentAnalyzer;
+    }
 
     @Override
     public String detectSentiment(String content) {

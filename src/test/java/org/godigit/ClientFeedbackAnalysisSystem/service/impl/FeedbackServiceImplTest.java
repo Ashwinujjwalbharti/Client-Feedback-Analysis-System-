@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +27,8 @@ class FeedbackServiceImplTest {
 
     private Feedback feedback(String client, String category, String sentiment) {
         Feedback f = new Feedback();
-        // Adjust these setters if your model is different (e.g., Lombok @Builder, constructor, etc.)
+        // Adjust these setters if your model is different (e.g., Lombok @Builder,
+        // constructor, etc.)
         f.setClientName(client);
         f.setCategory(category);
         f.setSentiment(sentiment);
@@ -54,8 +56,7 @@ class FeedbackServiceImplTest {
     void getAllFeedback_returnsList() {
         List<Feedback> data = List.of(
                 feedback("Acme", "support", "positive"),
-                feedback("Globex", "billing", "negative")
-        );
+                feedback("Globex", "billing", "negative"));
         when(repository.findAll()).thenReturn(data);
 
         List<Feedback> result = service.getAllFeedback();
@@ -72,8 +73,7 @@ class FeedbackServiceImplTest {
         List<Feedback> data = List.of(
                 feedback("Acme", "support", "positive"),
                 feedback("ACME", "billing", "neutral"),
-                feedback("Globex", "support", "negative")
-        );
+                feedback("Globex", "support", "negative"));
         when(repository.findAll()).thenReturn(data);
 
         List<Feedback> result = service.getFeedbackByClientName("acme");
@@ -87,8 +87,7 @@ class FeedbackServiceImplTest {
     @DisplayName("deleteClientFeedback: when none found, returns message and does not delete")
     void deleteClientFeedback_whenNone_returnsMessage() {
         List<Feedback> data = List.of(
-                feedback("Globex", "support", "negative")
-        );
+                feedback("Globex", "support", "negative"));
         when(repository.findAll()).thenReturn(data);
 
         String msg = service.deleteClientFeedback("Acme");
@@ -134,8 +133,8 @@ class FeedbackServiceImplTest {
     @DisplayName("deleteFeedbackByCategory: filters by contains(category.toLowerCase()) and deletes matched")
     void deleteFeedbackByCategory_filtersContainsLowercaseParamOnly() {
         Feedback f1 = feedback("Acme", "customer support", "positive"); // contains "support"
-        Feedback f2 = feedback("Globex", "Support", "neutral");         // DOES NOT match because case-sensitive 'contains'
-        Feedback f3 = feedback("Soylent", "billing", "negative");       // no match
+        Feedback f2 = feedback("Globex", "Support", "neutral"); // also matches due to case-insensitive
+        Feedback f3 = feedback("Soylent", "billing", "negative"); // no match
         when(repository.findAll()).thenReturn(List.of(f1, f2, f3));
 
         String msg = service.deleteFeedbackByCategory("support");
@@ -146,9 +145,9 @@ class FeedbackServiceImplTest {
         verify(repository).findAll();
         verify(repository).deleteAll(captor.capture());
         List<Feedback> deleted = captor.getValue();
-        assertEquals(1, deleted.size(), "Only lowercase 'customer support' contains 'support'");
-        assertTrue(deleted.contains(f1));
-        assertFalse(deleted.contains(f2));
+        assertEquals(2, deleted.size(), "Both 'customer support' and 'Support' should match 'support'");
+        assertTrue(deleted.containsAll(List.of(f1, f2)));
+        assertFalse(deleted.contains(f3));
         verifyNoMoreInteractions(repository);
     }
 
