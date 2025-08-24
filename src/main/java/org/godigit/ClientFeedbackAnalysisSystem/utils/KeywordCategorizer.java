@@ -8,7 +8,7 @@ import java.util.Map;
 public class KeywordCategorizer {
     
     private final Map<String, List<String>> keywords = new HashMap<>();
-
+// we are categorizing the feedback ui=sing following keywords
     public KeywordCategorizer() {
         
         keywords.put("Time", Arrays.asList("delay", "late", "fast", "slow", "wait", "schedule", "timing"));
