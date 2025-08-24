@@ -2,12 +2,15 @@ package org.godigit.ClientFeedbackAnalysisSystem.utils;
 
 import java.util.Properties;
 
+import org.springframework.stereotype.Component;
+
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.sentiment.SentimentCoreAnnotations;
 import edu.stanford.nlp.util.CoreMap;
 
+@Component
 public class SentimentAnalyzer {
 
     private final StanfordCoreNLP stanfordCoreNLP;

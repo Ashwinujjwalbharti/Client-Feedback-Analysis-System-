@@ -2,10 +2,7 @@ package org.godigit.ClientFeedbackAnalysisSystem.controller;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackDto;
-import org.godigit.ClientFeedbackAnalysisSystem.mapper.FeedbackMapper;
 import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
 import org.godigit.ClientFeedbackAnalysisSystem.service.impl.FilterServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,25 +20,22 @@ public class FilterController {
     private FilterServiceImpl filterService;
 
     @GetMapping("/date")
-    public ResponseEntity<List<FeedbackDto>> filterFeedbackByDate(@RequestParam String dateString) {
+    public ResponseEntity<List<Feedback>> filterFeedbackByDate(@RequestParam String dateString) {
         LocalDate date = LocalDate.parse(dateString);
         List<Feedback> feedbacks = filterService.filterByDate(date);
-        List<FeedbackDto> feedbackDtos = feedbacks.stream().map(FeedbackMapper :: toDto).collect(Collectors.toList());
-        return ResponseEntity.ok(feedbackDtos);
+        return ResponseEntity.ok(feedbacks);
     }
     
     @GetMapping("/sentiment")
-    public ResponseEntity<List<FeedbackDto>> filterFeedbackBySentiment(@RequestParam String sentiment) {
+    public ResponseEntity<List<Feedback>> filterFeedbackBySentiment(@RequestParam String sentiment) {
         List<Feedback> feedbacks = filterService.getBySentiment(sentiment);
-        List<FeedbackDto> dtos = feedbacks.stream().map(FeedbackMapper::toDto).collect(Collectors.toList());
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(feedbacks);
     }
 
     @GetMapping("/category")
-    public ResponseEntity<List<FeedbackDto>> filterFeedbackByCategory(@RequestParam String category) {
+    public ResponseEntity<List<Feedback>> filterFeedbackByCategory(@RequestParam String category) {
         List<Feedback> feedbacks = filterService.filterByCategory(category);
-        List<FeedbackDto> feedbackDtos = feedbacks.stream().map(FeedbackMapper :: toDto).collect(Collectors.toList());
-        return ResponseEntity.ok(feedbackDtos);
+        return ResponseEntity.ok(feedbacks);
     }
 
 }

@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class KeywordCategorizer {
     
     private final Map<String, List<String>> keywords = new HashMap<>();
-// we are categorizing the feedback ui=sing following keywords
+
     public KeywordCategorizer() {
         
         keywords.put("Time", Arrays.asList("delay", "late", "fast", "slow", "wait", "schedule", "timing"));
