@@ -6,8 +6,11 @@ import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
 import org.godigit.ClientFeedbackAnalysisSystem.repository.FeedbackRepository;
 import org.godigit.ClientFeedbackAnalysisSystem.service.FeedbackService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly=true , propagation = Propagation.SUPPORTS)
 public class FeedbackServiceImpl implements FeedbackService {
 
     private final FeedbackRepository repository;
@@ -17,6 +20,8 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    // we have used here for write operation
+    @Transactional(rollbackFor = Exception.class)
     public Feedback saveFeedback(Feedback feedback) {
         return repository.save(feedback);
     }
@@ -34,6 +39,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String deleteClientFeedback(String name) {
         List<Feedback> feedbacks = getFeedbackByClientName(name);
         if(feedbacks.isEmpty()) return "There are no feedbacks.";
@@ -48,6 +54,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String deleteFeedbackByCategory(String category) {
         List<Feedback> feedbacks = repository.findAll().stream()
         .filter(feedback -> feedback != null && feedback.getCategory().toLowerCase().contains(category.toLowerCase()))
@@ -57,6 +64,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String deleteFeedbackBySentiment(String sentiment) {
         List<Feedback> feedbacks = repository.findAll().stream()
         .filter(feedback -> feedback != null && feedback.getSentiment().equalsIgnoreCase(sentiment))

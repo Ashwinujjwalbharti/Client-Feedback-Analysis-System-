@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Invalid role. Supported roles are: ADMIN, MANAGER, CLIENT");
         }
 
-        user.setRoles(List.of(newRole));
+        user.setRole(newRole);
         userRepository.save(user);
         return userMapper.toDTO(user);
 

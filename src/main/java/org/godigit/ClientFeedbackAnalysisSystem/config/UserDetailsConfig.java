@@ -19,10 +19,11 @@ public class UserDetailsConfig {
             var user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-            List<SimpleGrantedAuthority> authorities = (user.getRoles() == null ? List.<org.godigit.ClientFeedbackAnalysisSystem.entity.Role>of() : user.getRoles())
-                    .stream()
-                    .map(r -> new SimpleGrantedAuthority("ROLE_" + r.name()))
-                    .collect(Collectors.toList());
+
+            List<SimpleGrantedAuthority> authorities = List.of(
+                    new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
+            );
+
 
             return org.springframework.security.core.userdetails.User
                     .withUsername(user.getUsername())

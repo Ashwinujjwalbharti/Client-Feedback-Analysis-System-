@@ -22,17 +22,27 @@ public class DashboardController {
         this.service = service;
     }
 
-    @GetMapping("/dashboard")
-    public ResponseEntity<List<FeedbackDto>> getPaginatedFeedbacksByCategory(
+    @GetMapping("/dashboard/category")
+    public ResponseEntity<List<Feedback>> getPaginatedFeedbacksByCategory(
             @RequestParam String category,
             @RequestParam int page,
             @RequestParam int size) {
 
         Page<Feedback> feedbackPage = service.getPaginatedFeedbacksByCategory(category, page, size);
-        List<FeedbackDto> feedbackDtos = feedbackPage.getContent()
-                                                     .stream()
-                                                     .map(FeedbackMapper::toDto)
-                                                     .collect(Collectors.toList());
-        return ResponseEntity.ok(feedbackDtos);
+        List<Feedback> feedbacks = feedbackPage.getContent();
+                                                     
+        return ResponseEntity.ok(feedbacks);
+    }
+
+    @GetMapping("/dashboard/sentiment")
+    public ResponseEntity<List<Feedback>> getPaginatedFeedbacksBySentiment(
+            @RequestParam String sentiment,
+            @RequestParam int page,
+            @RequestParam int size) {
+
+        Page<Feedback> feedbackPage = service.getPaginatedFeedbacksBySentiment(sentiment, page, size);
+        List<Feedback> feedbacks = feedbackPage.getContent();
+                                                     
+        return ResponseEntity.ok(feedbacks);
     }
 }
