@@ -57,10 +57,10 @@ public class UserMapper {
         user.setPassword(dto.getPassword());
 
         // If roles are provided, use them; else default to CLIENT (or move defaulting to the service)
-        List<Role> roles = (dto.getRoles() == null || dto.getRoles().isEmpty())
-                ? List.of(Role.CLIENT)
-                : dto.getRoles();
-        user.setRoles(roles);
+        Role role = (dto.getRole() == null)
+                ? (Role.CLIENT)
+                : dto.getRole();
+        user.setRole(role);
 
         return user;
     }
@@ -73,7 +73,7 @@ public class UserMapper {
         dto.setUsername(user.getUsername());
         // Never expose password on responses
         dto.setPassword(null);
-        dto.setRoles(user.getRoles());
+        dto.setRole(user.getRole());
 
         return dto;
     }
