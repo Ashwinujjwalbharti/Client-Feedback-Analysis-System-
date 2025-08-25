@@ -24,9 +24,17 @@ public class DashboardServiceImpl implements DashboardService {
         return repository.findAll(pageable);
     }
 
+
+
     @Override
     public Page<Feedback> getPaginatedFeedbacksByCategory(String category, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return repository.findByCategory(category, pageable);
+    }
+
+    @Override
+    public Page<Feedback> getPaginatedFeedbacksBySentiment(String sentiment, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.findBySentiment(sentiment, pageable);
     }
 }
