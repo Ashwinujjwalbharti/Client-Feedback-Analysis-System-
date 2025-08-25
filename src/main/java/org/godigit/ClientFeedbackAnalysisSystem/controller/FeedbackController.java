@@ -2,6 +2,8 @@ package org.godigit.ClientFeedbackAnalysisSystem.controller;
 
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackCategoryUpdate;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackDto;
+import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackEmojiSentimentUpdate;
+import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackEmojiUpdate;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackMessageUpdate;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackNameUpdate;
 import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackSentimentUpdate;
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
@@ -46,12 +51,13 @@ public class FeedbackController {
         Feedback feedback = FeedbackMapper.toEntity(feedbackDto);
         feedback.setSentiment(sentimentService.detectSentiment(feedback.getMessage()));;
         feedback.setCategory(keywordCategorizationServiceImpl.categorizeFeedback(feedback.getMessage()));
+        feedback.setEmojiSentiment(emojiSentimentServiceImpl.analyzeEmojiSentiment(feedbackDto.getEmoji()));
         Feedback saved = service.saveFeedback(feedback);
         return ResponseEntity.ok(FeedbackMapper.toDto(saved));
     }
 
 
-    @GetMapping("/retrieve")
+    @GetMapping("/retrieve/all")
     public ResponseEntity<List<Feedback>> getAllFeedback() {
         List<Feedback> feedbacks = service.getAllFeedback();
         return ResponseEntity.ok(feedbacks);
@@ -113,6 +119,32 @@ public class FeedbackController {
         feedbacks.stream()
         .filter(feedback -> feedback != null && feedback.getId() == feedbackSentimentUpdate.getId() && feedback.getClientName().equalsIgnoreCase(feedbackSentimentUpdate.getName()))
         .forEach(feedback -> feedback.setSentiment(feedbackSentimentUpdate.getSentiment()));
+        
+        feedbacks.forEach(service :: saveFeedback);
+
+        return ResponseEntity.ok(feedbacks);
+    }
+
+    @PutMapping("update/emoji")
+    public ResponseEntity<List<Feedback>> updateClientFeedbackEmoji(@RequestBody FeedbackEmojiUpdate feedbackEmojiUpdate) {
+        List<Feedback> feedbacks = service.getFeedbackByClientName(feedbackEmojiUpdate.getName());
+        
+        feedbacks.stream()
+        .filter(feedback -> feedback != null && feedback.getId() == feedbackEmojiUpdate.getId() && feedback.getClientName().equalsIgnoreCase(feedbackEmojiUpdate.getName()))
+        .forEach(feedback -> feedback.setEmoji(feedbackEmojiUpdate.getEmoji()));
+        
+        feedbacks.forEach(service :: saveFeedback);
+
+        return ResponseEntity.ok(feedbacks);
+    }
+
+    @PutMapping("update/emoji/sentiment")
+    public ResponseEntity<List<Feedback>> updateClientFeedbackEmojiSentiment(@RequestBody FeedbackEmojiSentimentUpdate feedbackEmojiSentimentUpdate) {
+        List<Feedback> feedbacks = service.getFeedbackByClientName(feedbackEmojiSentimentUpdate.getName());
+        
+        feedbacks.stream()
+        .filter(feedback -> feedback != null && feedback.getId() == feedbackEmojiSentimentUpdate.getId() && feedback.getClientName().equalsIgnoreCase(feedbackEmojiSentimentUpdate.getName()))
+        .forEach(feedback -> feedback.setEmojiSentiment(feedbackEmojiSentimentUpdate.getEmojiSentiment()));
         
         feedbacks.forEach(service :: saveFeedback);
 

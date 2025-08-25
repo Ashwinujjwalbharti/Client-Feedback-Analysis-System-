@@ -14,8 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class FeedbackDto {
-    private String name;
-    private String message;
-    private String emoji;
+public class EmojiSentimentPredictor {
+    private String label;
+    private Double score;
 }
