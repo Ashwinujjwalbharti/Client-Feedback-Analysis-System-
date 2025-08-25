@@ -1,7 +1,5 @@
 package org.godigit.ClientFeedbackAnalysisSystem.controller;
 
-import org.godigit.ClientFeedbackAnalysisSystem.dto.FeedbackDto;
-import org.godigit.ClientFeedbackAnalysisSystem.mapper.FeedbackMapper;
 import org.godigit.ClientFeedbackAnalysisSystem.models.Feedback;
 import org.godigit.ClientFeedbackAnalysisSystem.service.impl.DashboardServiceImpl;
 
@@ -10,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/feedback")

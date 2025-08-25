@@ -36,8 +36,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.godigit.ClientFeedbackAnalysisSystem.entity.Role;
 
-import java.util.List;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

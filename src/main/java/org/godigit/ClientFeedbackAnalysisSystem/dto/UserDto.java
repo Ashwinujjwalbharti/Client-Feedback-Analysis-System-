@@ -3,8 +3,6 @@ package org.godigit.ClientFeedbackAnalysisSystem.dto;
 import lombok.*;
 import org.godigit.ClientFeedbackAnalysisSystem.entity.Role;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
