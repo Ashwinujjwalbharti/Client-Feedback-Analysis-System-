@@ -7,5 +7,6 @@ import org.springframework.data.domain.Page;
 public interface DashboardService {
     Page<Feedback> getPaginatedFeedbacks(int page, int size);
     Page<Feedback> getPaginatedFeedbacksByCategory(String category,int page, int size);
+    Page<Feedback> getPaginatedFeedbacksBySentiment(String sentiment,int page, int size);
 }
 
