@@ -21,7 +21,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     List<Feedback> searchByKeyword(@Param("keyword") String keyword);
     
     
-    @Query("SELECT f FROM Feedback f WHERE LOWER(f.category) = LOWER(:category)")
+    @Query("SELECT f FROM Feedback f WHERE LOWER(f.category) LIKE LOWER(CONCAT('%', :category, '%'))")
     Page<Feedback> findByCategory(@Param("category") String category,Pageable pageable);
 
 
