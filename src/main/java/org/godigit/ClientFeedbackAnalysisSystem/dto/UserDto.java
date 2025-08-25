@@ -12,6 +12,6 @@ import java.util.List;
 public class UserDto {
     private String username;
     private String password;
-    private List<Role> roles;
+    private Role role;
 
 }

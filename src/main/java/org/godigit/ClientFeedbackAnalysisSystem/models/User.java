@@ -62,12 +62,12 @@ public class User {
     @Column(nullable = false)
     private String password; // store BCrypt-hashed password
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
-    )
-    @Column(name = "role", nullable = false, length = 30)
-    private List<Role> roles;
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @Enumerated(EnumType.STRING)
+//    @CollectionTable(
+//            name = "user_roles",
+//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+//    )
+ @Column(name = "role", nullable = false, length = 30)
+    private Role role;
 }
