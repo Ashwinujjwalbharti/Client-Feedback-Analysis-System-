@@ -17,6 +17,7 @@ import java.util.Map;
 public class EmojiSentimentServiceImpl implements EmojiSentimentService {
     
     private final String API_URL = "https://api-inference.huggingface.co/models/cardiffnlp/twitter-roberta-base-sentiment";
+    
     @Value("${huggingface.api_key}")
     private String API_KEY;
 

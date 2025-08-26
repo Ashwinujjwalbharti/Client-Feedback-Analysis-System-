@@ -6,10 +6,10 @@ import org.godigit.ClientFeedbackAnalysisSystem.entity.Role;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter@ToString
+@Setter
+@ToString
 public class UserDto {
     private String username;
     private String password;
     private Role role;
-
 }

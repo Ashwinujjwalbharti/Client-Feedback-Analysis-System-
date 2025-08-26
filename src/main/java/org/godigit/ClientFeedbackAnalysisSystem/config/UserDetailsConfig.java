@@ -26,7 +26,7 @@ public class UserDetailsConfig {
 
             return org.springframework.security.core.userdetails.User
                     .withUsername(user.getUsername())
-                    .password(user.getPassword()) // must be BCrypt-encoded in DB
+                    .password(user.getPassword()) 
                     .authorities(authorities)
                     .accountExpired(false)
                     .accountLocked(false)

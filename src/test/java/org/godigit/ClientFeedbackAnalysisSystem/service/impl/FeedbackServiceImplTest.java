@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class FeedbackServiceImplTest {
+public class FeedbackServiceImplTest {
 
     @Mock
     private FeedbackRepository repository;
@@ -27,8 +27,6 @@ class FeedbackServiceImplTest {
 
     private Feedback feedback(String client, String category, String sentiment) {
         Feedback f = new Feedback();
-        // Adjust these setters if your model is different (e.g., Lombok @Builder,
-        // constructor, etc.)
         f.setClientName(client);
         f.setCategory(category);
         f.setSentiment(sentiment);
@@ -40,7 +38,6 @@ class FeedbackServiceImplTest {
     void saveFeedback_returnsSavedEntity() {
         Feedback input = feedback("Acme", "support", "positive");
         Feedback saved = feedback("Acme", "support", "positive");
-        // If your entity sets ID in DB, you can simulate: saved.setId(1L);
 
         when(repository.save(input)).thenReturn(saved);
 
@@ -132,9 +129,9 @@ class FeedbackServiceImplTest {
     @Test
     @DisplayName("deleteFeedbackByCategory: filters by contains(category.toLowerCase()) and deletes matched")
     void deleteFeedbackByCategory_filtersContainsLowercaseParamOnly() {
-        Feedback f1 = feedback("Acme", "customer support", "positive"); // contains "support"
-        Feedback f2 = feedback("Globex", "Support", "neutral"); // also matches due to case-insensitive
-        Feedback f3 = feedback("Soylent", "billing", "negative"); // no match
+        Feedback f1 = feedback("Acme", "customer support", "positive"); 
+        Feedback f2 = feedback("Globex", "Support", "neutral"); 
+        Feedback f3 = feedback("Soylent", "billing", "negative"); 
         when(repository.findAll()).thenReturn(List.of(f1, f2, f3));
 
         String msg = service.deleteFeedbackByCategory("support");
