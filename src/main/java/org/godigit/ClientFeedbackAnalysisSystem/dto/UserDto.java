@@ -1,7 +1,8 @@
 package org.godigit.ClientFeedbackAnalysisSystem.dto;
 
+import org.godigit.ClientFeedbackAnalysisSystem.models.enums.Role;
+
 import lombok.*;
-import org.godigit.ClientFeedbackAnalysisSystem.entity.Role;
 
 @AllArgsConstructor
 @NoArgsConstructor
