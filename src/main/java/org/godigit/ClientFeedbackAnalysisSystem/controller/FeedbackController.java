@@ -131,7 +131,10 @@ public class FeedbackController {
         
         feedbacks.stream()
         .filter(feedback -> feedback != null && feedback.getId() == feedbackEmojiUpdate.getId() && feedback.getClientName().equalsIgnoreCase(feedbackEmojiUpdate.getName()))
-        .forEach(feedback -> feedback.setEmoji(feedbackEmojiUpdate.getEmoji()));
+        .forEach(feedback -> {
+            feedback.setEmoji(feedbackEmojiUpdate.getEmoji());
+            feedback.setEmojiSentiment(emojiSentimentServiceImpl.analyzeEmojiSentiment(feedbackEmojiUpdate.getEmoji()));
+        });
         
         feedbacks.forEach(service :: saveFeedback);
 
