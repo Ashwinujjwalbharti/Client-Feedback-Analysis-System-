@@ -1,6 +1,8 @@
 package org.godigit.ClientFeedbackAnalysisSystem.service.impl;
 
 import org.godigit.ClientFeedbackAnalysisSystem.dto.UserDto;
+import org.godigit.ClientFeedbackAnalysisSystem.exception.InvalidRoleException;
+import org.godigit.ClientFeedbackAnalysisSystem.exception.UserNotFoundException;
 import org.godigit.ClientFeedbackAnalysisSystem.mapper.UserMapper;
 import org.godigit.ClientFeedbackAnalysisSystem.models.User;
 import org.godigit.ClientFeedbackAnalysisSystem.models.enums.Role;
@@ -32,20 +34,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUser(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(username));
         return userMapper.toDTO(user);
     }
 
     @Override
     public UserDto updateUserRole(String username, String role) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(username));
 
         Role newRole;
         try {
             newRole = Role.valueOf(role.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid role. Supported roles are: ADMIN, MANAGER, CLIENT");
+            throw new InvalidRoleException(role);
         }
 
         user.setRole(newRole);
