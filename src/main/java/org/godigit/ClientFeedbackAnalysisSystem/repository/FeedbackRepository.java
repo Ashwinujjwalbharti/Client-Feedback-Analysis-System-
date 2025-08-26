@@ -16,7 +16,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     List<Feedback> findByCategoryIgnoreCase(String category);
     List<Feedback> findBySubmittedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 
-    
+//    
     @Query("SELECT f FROM Feedback f WHERE LOWER(f.message) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Feedback> searchByKeyword(@Param("keyword") String keyword);
     
@@ -25,7 +25,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     Page<Feedback> findByCategory(@Param("category") String category,Pageable pageable);
 
 
-    @Query("SELECT f FROM Feedback f WHERE LOWER(f.Sentiment) = LOWER(:sentiment)")
+    @Query("SELECT f FROM Feedback f WHERE LOWER(f.sentiment) = LOWER(:sentiment)")
     Page<Feedback> findBySentiment(@Param("sentiment") String sentiment, Pageable pageable);
 
 
