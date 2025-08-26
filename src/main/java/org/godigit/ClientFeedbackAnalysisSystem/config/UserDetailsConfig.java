@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Configuration
 public class UserDetailsConfig {
@@ -27,7 +26,7 @@ public class UserDetailsConfig {
 
             return org.springframework.security.core.userdetails.User
                     .withUsername(user.getUsername())
-                    .password(user.getPassword()) // must be BCrypt-encoded in DB
+                    .password(user.getPassword()) 
                     .authorities(authorities)
                     .accountExpired(false)
                     .accountLocked(false)

@@ -11,8 +11,6 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-  //  private final String SECRET_KEY = "u8f9vB3kL2pQ9sX7mZ4rT1cV8eW6yA0dG3hJ5kL7nP9qR2tU4vX6zY8bC0eF1gH3j";
-
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
@@ -21,7 +19,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) 
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }

@@ -40,9 +40,9 @@ public class FilterServiceImplTest {
         LocalDate date = LocalDate.of(2025, 8, 10);
 
         List<Feedback> data = List.of(
-                fb("support", "positive", date.atTime(10, 0)),
-                fb("billing", "negative", date.atTime(23, 59)),
-                fb("general", "neutral", date.plusDays(1).atTime(0, 1))
+            fb("support", "positive", date.atTime(10, 0)),
+            fb("billing", "negative", date.atTime(23, 59)),
+            fb("general", "neutral", date.plusDays(1).atTime(0, 1))
         );
 
         when(repository.findAll()).thenReturn(data);
@@ -62,8 +62,8 @@ public class FilterServiceImplTest {
         LocalDate date = LocalDate.of(2025, 8, 12);
 
         List<Feedback> data = List.of(
-                fb("support", "positive", date.minusDays(1).atTime(12, 0)),
-                fb("billing", "negative", date.minusDays(2).atTime(8, 30))
+            fb("support", "positive", date.minusDays(1).atTime(12, 0)),
+            fb("billing", "negative", date.minusDays(2).atTime(8, 30))
         );
 
         when(repository.findAll()).thenReturn(data);
@@ -78,15 +78,47 @@ public class FilterServiceImplTest {
     }
 
     @Test
+    @DisplayName("filterByDate: returns empty list when repository is empty")
+    void filterByDate_emptyRepository() {
+        when(repository.findAll()).thenReturn(List.of());
+
+        var result = service.filterByDate(LocalDate.of(2025, 1, 1));
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        verify(repository).findAll();
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    @DisplayName("filterByDate: null date -> equals(null) is false, so result is empty")
+    void filterByDate_nullDate_returnsEmpty() {
+        List<Feedback> data = List.of(
+            fb("support", "positive", LocalDateTime.of(2025, 8, 10, 12, 0))
+        );
+
+        when(repository.findAll()).thenReturn(data);
+
+        var result = service.filterByDate(null);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        verify(repository).findAll();
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
     @DisplayName("getBySentiment: case-insensitive equality, ignores null sentiments")
     void getBySentiment_caseInsensitiveAndSkipsNulls() {
         String sentiment = "Positive";
 
         List<Feedback> data = List.of(
-                fb("support", "POSITIVE", LocalDateTime.now()),
-                fb("billing", "positive", LocalDateTime.now()),
-                fb("general", "negative", LocalDateTime.now()),
-                fb("sales", null, LocalDateTime.now())
+            fb("support", "POSITIVE", LocalDateTime.now()),
+            fb("billing", "positive", LocalDateTime.now()),
+            fb("general", "negative", LocalDateTime.now()),
+            fb("sales", null, LocalDateTime.now())
         );
 
         when(repository.findAll()).thenReturn(data);
@@ -95,6 +127,25 @@ public class FilterServiceImplTest {
 
         assertEquals(2, result.size());
         assertTrue(result.stream().allMatch(f -> "positive".equalsIgnoreCase(f.getSentiment())));
+
+        verify(repository).findAll();
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    @DisplayName("getBySentiment: returns empty when no sentiments match")
+    void getBySentiment_noMatches() {
+        List<Feedback> data = List.of(
+            fb("support", "neutral", LocalDateTime.now()),
+            fb("billing", "negative", LocalDateTime.now())
+        );
+
+        when(repository.findAll()).thenReturn(data);
+
+        var result = service.getBySentiment("positive");
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
 
         verify(repository).findAll();
         verifyNoMoreInteractions(repository);
@@ -120,10 +171,10 @@ public class FilterServiceImplTest {
         String categoryFilter = "port"; 
 
         List<Feedback> data = List.of(
-                fb("Support", "positive", LocalDateTime.now()),
-                fb("Customer Support", "neutral", LocalDateTime.now()),
-                fb("Billing", "negative", LocalDateTime.now()),
-                fb(null, "positive", LocalDateTime.now())
+            fb("Support", "positive", LocalDateTime.now()),
+            fb("Customer Support", "neutral", LocalDateTime.now()),
+            fb("Billing", "negative", LocalDateTime.now()),
+            fb(null, "positive", LocalDateTime.now())
         );
 
         when(repository.findAll()).thenReturn(data);
@@ -131,7 +182,9 @@ public class FilterServiceImplTest {
         var result = service.filterByCategory(categoryFilter);
 
         assertEquals(2, result.size());
-        assertTrue(result.stream().allMatch(f -> f.getCategory().toLowerCase().contains(categoryFilter.toLowerCase())));
+        assertTrue(result.stream().allMatch(
+            f -> f.getCategory().toLowerCase().contains(categoryFilter.toLowerCase())
+        ));
 
         verify(repository).findAll();
         verifyNoMoreInteractions(repository);
@@ -143,8 +196,8 @@ public class FilterServiceImplTest {
         String categoryFilter = "tech";
 
         List<Feedback> data = List.of(
-                fb("Support", "positive", LocalDateTime.now()),
-                fb("Billing", "negative", LocalDateTime.now())
+            fb("Support", "positive", LocalDateTime.now()),
+            fb("Billing", "negative", LocalDateTime.now())
         );
 
         when(repository.findAll()).thenReturn(data);
@@ -153,6 +206,33 @@ public class FilterServiceImplTest {
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
+
+        verify(repository).findAll();
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    @DisplayName("filterByCategory: returns empty list when repository is empty")
+    void filterByCategory_emptyRepository() {
+        when(repository.findAll()).thenReturn(List.of());
+
+        var result = service.filterByCategory("billing");
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        verify(repository).findAll();
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    @DisplayName("filterByCategory: null filter -> throws NullPointerException (current behavior)")
+    void filterByCategory_nullFilter_throwsNPE() {
+        when(repository.findAll()).thenReturn(List.of(
+            fb("Support", "positive", LocalDateTime.now())
+        ));
+
+        assertThrows(NullPointerException.class, () -> service.filterByCategory(null));
 
         verify(repository).findAll();
         verifyNoMoreInteractions(repository);

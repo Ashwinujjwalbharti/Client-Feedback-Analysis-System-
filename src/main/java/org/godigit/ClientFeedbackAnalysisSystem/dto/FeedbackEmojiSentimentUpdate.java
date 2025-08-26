@@ -6,12 +6,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Component
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UpdateRoleRequest {
-    private String role;
+@ToString
+public class FeedbackEmojiSentimentUpdate {
+    private Long id;
+    private String name;
+    private String emojiSentiment;
 }

@@ -28,14 +28,14 @@ public class FilterServiceImpl implements FilterService {
     @Override
     public List<Feedback> getBySentiment(String sentiment) {
         return feedbackRepository.findAll().stream()
-                .filter(f -> f.getSentiment() != null && f.getSentiment().equalsIgnoreCase(sentiment))
-                .collect(Collectors.toList());
+        .filter(f -> f.getSentiment() != null && f.getSentiment().equalsIgnoreCase(sentiment))
+        .collect(Collectors.toList());
     }
 
     @Override
     public List<Feedback> filterByCategory(String category) {
         return feedbackRepository.findAll().stream()
-                .filter(f -> f.getCategory() != null && f.getCategory().toLowerCase()
-                        .contains(category.toLowerCase())).toList();
+        .filter(f -> f.getCategory() != null && f.getCategory().toLowerCase()
+        .contains(category.toLowerCase())).toList();
     }
 }

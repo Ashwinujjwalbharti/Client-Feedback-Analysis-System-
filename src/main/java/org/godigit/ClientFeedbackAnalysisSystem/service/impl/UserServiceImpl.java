@@ -9,8 +9,6 @@ import org.godigit.ClientFeedbackAnalysisSystem.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserServiceImpl implements UserService {
 

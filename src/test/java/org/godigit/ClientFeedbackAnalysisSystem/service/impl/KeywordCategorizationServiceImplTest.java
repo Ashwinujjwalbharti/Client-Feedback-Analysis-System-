@@ -1,11 +1,9 @@
 package org.godigit.ClientFeedbackAnalysisSystem.service.impl;
 
 import org.godigit.ClientFeedbackAnalysisSystem.utils.KeywordCategorizer;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -26,69 +24,147 @@ public class KeywordCategorizationServiceImplTest {
     @InjectMocks
     private KeywordCategorizationServiceImpl service;
 
-    private Map<String, List<String>> keywordMap() {
-        Map<String, List<String>> map = new LinkedHashMap<>();
-        map.put("support", List.of("help", "support", "assist"));
-        map.put("billing", List.of("invoice", "billing", "charge"));
-        map.put("product", List.of("bug", "feature", "crash"));
+    private Map<String, List<String>> keywordsMap(Object... pairs) {
+        LinkedHashMap<String, List<String>> map = new LinkedHashMap<>();
+        for (int i = 0; i < pairs.length; i += 2) {
+            String key = (String) pairs[i];
+            List<String> value = (List<String>) pairs[i + 1];
+            map.put(key, value);
+        }
         return map;
     }
 
-    @BeforeEach
-    void setUpKeywords() {
-        when(keywordCategorizer.getKeywords()).thenReturn(keywordMap());
+    @Test
+    @DisplayName("categorizeFeedback: returns empty string for null message")
+    void categorizeFeedback_nullMessage_returnsEmpty() {
+        String result = service.categorizeFeedback(null);
+        assertEquals("", result);
+
+        verifyNoInteractions(keywordCategorizer);
     }
 
     @Test
-    @DisplayName("categorizeFeedback: returns single category when one category matches")
-    void categorizeFeedback_singleCategory() {
-        String msg = "I need help with my account.";
+    @DisplayName("categorizeFeedback: returns empty string for blank message")
+    void categorizeFeedback_blankMessage_returnsEmpty() {
+        String result1 = service.categorizeFeedback("");
+        String result2 = service.categorizeFeedback("   ");
+        assertEquals("", result1);
+        assertEquals("", result2);
 
-        String result = service.categorizeFeedback(msg);
+        verifyNoInteractions(keywordCategorizer);
+    }
 
-        assertEquals("support", result);
-        verify(keywordCategorizer, atLeastOnce()).getKeywords();
+    @Test
+    @DisplayName("categorizeFeedback: returns empty string when no keywords configured")
+    void categorizeFeedback_emptyKeywordMap_returnsEmpty() {
+        when(keywordCategorizer.getKeywords()).thenReturn(Map.of());
+
+        String result = service.categorizeFeedback("payment failed due to gateway error");
+        assertEquals("", result);
+
+        verify(keywordCategorizer).getKeywords();
         verifyNoMoreInteractions(keywordCategorizer);
     }
 
     @Test
-    @DisplayName("categorizeFeedback: returns comma-separated categories when multiple match (order preserved)")
-    void categorizeFeedback_multipleCategories() {
-        String msg = "The invoice has a wrong charge and the app tends to crash.";
+    @DisplayName("categorizeFeedback: returns empty string when no keywords match the message")
+    void categorizeFeedback_noKeywordMatches_returnsEmpty() {
+        when(keywordCategorizer.getKeywords()).thenReturn(
+            keywordsMap(
+                "Billing", List.of("invoice", "payment"),
+                "Support", List.of("help", "issue")
+            )
+        );
 
-        String result = service.categorizeFeedback(msg);
-
-        assertEquals("billing,product", result);
-    }
-
-    @Test
-    @DisplayName("categorizeFeedback: case-insensitive match for both message and keywords")
-    void categorizeFeedback_caseInsensitive() {
-        String msg = "Please SuPpOrT me, I need HeLP urgently.";
-
-        String result = service.categorizeFeedback(msg);
-
-        assertEquals("support", result);
-    }
-
-    @Test
-    @DisplayName("categorizeFeedback: multiple keywords of the same category produce only one category (distinct)")
-    void categorizeFeedback_noDuplicatesPerCategory() {
-        String msg = "Need help and support and some assistance please!";
-
-        String result = service.categorizeFeedback(msg);
-
-        assertEquals("support", result);
-        assertFalse(result.contains("support,support"));
-    }
-
-    @Test
-    @DisplayName("categorizeFeedback: returns empty string when there are no matches")
-    void categorizeFeedback_noMatchReturnsEmpty() {
-        String msg = "Just saying hello world with no relevant terms.";
-
-        String result = service.categorizeFeedback(msg);
-
+        String result = service.categorizeFeedback("Design looks modern and clean");
         assertEquals("", result);
+
+        verify(keywordCategorizer).getKeywords();
+        verifyNoMoreInteractions(keywordCategorizer);
+    }
+
+    @Test
+    @DisplayName("categorizeFeedback: matches a single category when any of its keywords appear")
+    void categorizeFeedback_singleCategory_singleMatch() {
+        when(keywordCategorizer.getKeywords()).thenReturn(
+            keywordsMap(
+                "Billing", List.of("invoice", "payment"),
+                "Support", List.of("help", "issue")
+            )
+        );
+
+        String result = service.categorizeFeedback("My payment failed at checkout");
+        assertEquals("Billing", result);
+
+        verify(keywordCategorizer).getKeywords();
+        verifyNoMoreInteractions(keywordCategorizer);
+    }
+
+    @Test
+    @DisplayName("categorizeFeedback: distinct category even if multiple keywords from same category match")
+    void categorizeFeedback_singleCategory_multipleKeywords_distinct() {
+        when(keywordCategorizer.getKeywords()).thenReturn(
+            keywordsMap(
+                "Billing", List.of("invoice", "payment", "gateway")
+            )
+        );
+
+        String result = service.categorizeFeedback("Invoice not generated and payment gateway shows error");
+        assertEquals("Billing", result, "Category should appear once due to distinct()");
+        verify(keywordCategorizer).getKeywords();
+        verifyNoMoreInteractions(keywordCategorizer);
+    }
+
+    @Test
+    @DisplayName("categorizeFeedback: returns multiple categories joined by comma in map insertion order")
+    void categorizeFeedback_multipleCategories_orderedByInsertion() {
+        when(keywordCategorizer.getKeywords()).thenReturn(
+            keywordsMap(
+                "Billing", List.of("invoice", "payment"),
+                "Support", List.of("help", "issue"),
+                "UX", List.of("design", "ui")
+            )
+        );
+
+        String msg = "I need help with payment; the UI also looks confusing.";
+        String result = service.categorizeFeedback(msg);
+
+        assertEquals("Billing,Support,UX", result);
+        verify(keywordCategorizer).getKeywords();
+        verifyNoMoreInteractions(keywordCategorizer);
+    }
+
+    @Test
+    @DisplayName("categorizeFeedback: matching is case-insensitive on both message and keywords")
+    void categorizeFeedback_caseInsensitive() {
+        when(keywordCategorizer.getKeywords()).thenReturn(
+            keywordsMap(
+                "Support", List.of("HeLp", "ISSUE"),
+                "Billing", List.of("PaYMenT")
+            )
+        );
+
+        String result = service.categorizeFeedback("Need HELP with PAYMENT asap due to an Issue");
+        assertEquals("Support,Billing", result);
+
+        verify(keywordCategorizer).getKeywords();
+        verifyNoMoreInteractions(keywordCategorizer);
+    }
+
+    @Test
+    @DisplayName("categorizeFeedback: uses substring containment (not whole-word match)")
+    void categorizeFeedback_substringContainment() {
+        when(keywordCategorizer.getKeywords()).thenReturn(
+            keywordsMap(
+                "Billing", List.of("pay"),
+                "Support", List.of("port")
+            )
+        );
+
+        String result = service.categorizeFeedback("Support team resolved my payment problem");
+        assertEquals("Billing,Support", result);
+
+        verify(keywordCategorizer).getKeywords();
+        verifyNoMoreInteractions(keywordCategorizer);
     }
 }

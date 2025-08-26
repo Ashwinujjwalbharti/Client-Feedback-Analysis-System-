@@ -20,7 +20,6 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    // we have used here for write operation
     @Transactional(rollbackFor = Exception.class)
     public Feedback saveFeedback(Feedback feedback) {
         return repository.save(feedback);
