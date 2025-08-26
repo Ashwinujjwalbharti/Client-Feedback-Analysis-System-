@@ -1,8 +1,8 @@
 package org.godigit.ClientFeedbackAnalysisSystem.mapper;
 
 import org.godigit.ClientFeedbackAnalysisSystem.dto.UserDto;
-import org.godigit.ClientFeedbackAnalysisSystem.entity.Role;
 import org.godigit.ClientFeedbackAnalysisSystem.models.User;
+import org.godigit.ClientFeedbackAnalysisSystem.models.enums.Role;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

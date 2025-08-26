@@ -1,8 +1,9 @@
 package org.godigit.ClientFeedbackAnalysisSystem.models;
 
+import org.godigit.ClientFeedbackAnalysisSystem.models.enums.Role;
+
 import jakarta.persistence.*;
 import lombok.*;
-import org.godigit.ClientFeedbackAnalysisSystem.entity.Role;
 
 @Entity
 @AllArgsConstructor

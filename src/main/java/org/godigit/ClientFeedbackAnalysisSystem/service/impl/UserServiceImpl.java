@@ -1,9 +1,9 @@
 package org.godigit.ClientFeedbackAnalysisSystem.service.impl;
 
 import org.godigit.ClientFeedbackAnalysisSystem.dto.UserDto;
-import org.godigit.ClientFeedbackAnalysisSystem.entity.Role;
 import org.godigit.ClientFeedbackAnalysisSystem.mapper.UserMapper;
 import org.godigit.ClientFeedbackAnalysisSystem.models.User;
+import org.godigit.ClientFeedbackAnalysisSystem.models.enums.Role;
 import org.godigit.ClientFeedbackAnalysisSystem.repository.UserRepository;
 import org.godigit.ClientFeedbackAnalysisSystem.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
