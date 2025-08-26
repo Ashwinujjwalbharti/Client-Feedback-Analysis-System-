@@ -25,7 +25,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     Page<Feedback> findByCategory(@Param("category") String category,Pageable pageable);
 
 
-    @Query("SELECT f FROM Feedback f WHERE LOWER(f.Sentiment) = LOWER(:sentiment)")
+    @Query("SELECT f FROM Feedback f WHERE LOWER(f.sentiment) = LOWER(:sentiment)")
     Page<Feedback> findBySentiment(@Param("sentiment") String sentiment, Pageable pageable);
 
 
